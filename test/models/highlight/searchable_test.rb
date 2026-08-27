@@ -33,14 +33,14 @@ class Highlight::SearchableTest < ActiveSupport::TestCase
     %w[ foo-bar foo* :colon ^caret NEAR AND OR ].each do |query|
       assert_nothing_raised { search(query).to_a }
     end
-    assert_nothing_raised { search(%q{an "unbalanced quote}).to_a }
+    assert_nothing_raised { search(%q(an "unbalanced quote)).to_a }
     assert_nothing_raised { search("").to_a }
   end
 
   test "honours a quoted phrase" do
     @book.highlights.record(text: "people have been doing something else entirely")
 
-    assert_equal 1, search(%q{"very few people"}).count
+    assert_equal 1, search(%q("very few people")).count
   end
 
   test "counts without tripping over the excerpt columns" do
