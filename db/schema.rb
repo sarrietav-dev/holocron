@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_27_213002) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_27_213003) do
   create_table "books", force: :cascade do |t|
     t.datetime "archived_at"
     t.string "asin"
@@ -100,4 +100,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_213002) do
   add_foreign_key "sessions", "users"
   add_foreign_key "taggings", "tags"
   add_foreign_key "tags", "users"
+
+  # Virtual tables defined in this database.
+  # Note that virtual tables may not work with other database engines. Be careful if changing database.
+  create_virtual_table "highlights_fts", "fts5", ["text", "note", "book_title", "book_author", "tokenize='porter unicode61'"]
 end
