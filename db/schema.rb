@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_27_213003) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_27_213005) do
   create_table "books", force: :cascade do |t|
     t.datetime "archived_at"
     t.string "asin"
@@ -56,6 +56,28 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_213003) do
     t.index ["user_id"], name: "index_highlights_on_user_id"
   end
 
+  create_table "review_highlights", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "highlight_id", null: false
+    t.integer "position", default: 0, null: false
+    t.integer "review_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["highlight_id"], name: "index_review_highlights_on_highlight_id"
+    t.index ["review_id", "highlight_id"], name: "index_review_highlights_on_review_id_and_highlight_id", unique: true
+    t.index ["review_id"], name: "index_review_highlights_on_review_id"
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.date "scheduled_for", null: false
+    t.datetime "sent_at"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "scheduled_for"], name: "index_reviews_on_user_id_and_scheduled_for", unique: true
+    t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -88,8 +110,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_213003) do
 
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.boolean "daily_review_enabled", default: true, null: false
+    t.integer "daily_review_hour", default: 8, null: false
+    t.integer "daily_review_size", default: 5, null: false
     t.string "email_address", null: false
     t.string "password_digest", null: false
+    t.string "time_zone", default: "UTC", null: false
     t.datetime "updated_at", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
@@ -97,6 +123,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_213003) do
   add_foreign_key "books", "users"
   add_foreign_key "highlights", "books"
   add_foreign_key "highlights", "users"
+  add_foreign_key "review_highlights", "highlights"
+  add_foreign_key "review_highlights", "reviews"
+  add_foreign_key "reviews", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "taggings", "tags"
   add_foreign_key "tags", "users"

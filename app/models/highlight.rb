@@ -1,5 +1,5 @@
 class Highlight < ApplicationRecord
-  include Deduplicated, Discardable, Searchable, Taggable
+  include Deduplicated, Discardable, Reviewable, Searchable, Taggable
 
   belongs_to :user
   belongs_to :book, counter_cache: :highlights_count, touch: true
