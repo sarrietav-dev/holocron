@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_27_213005) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_27_213006) do
   create_table "books", force: :cascade do |t|
     t.datetime "archived_at"
     t.string "asin"
@@ -28,6 +28,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_213005) do
     t.index ["user_id", "asin"], name: "index_books_on_user_id_and_asin", unique: true, where: "asin IS NOT NULL"
     t.index ["user_id", "dedupe_key"], name: "index_books_on_user_id_and_dedupe_key", unique: true
     t.index ["user_id"], name: "index_books_on_user_id"
+  end
+
+  create_table "credentials", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "data"
+    t.string "last_error"
+    t.datetime "last_used_at"
+    t.string "provider", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.datetime "verified_at"
+    t.index ["user_id", "provider"], name: "index_credentials_on_user_id_and_provider", unique: true
+    t.index ["user_id"], name: "index_credentials_on_user_id"
   end
 
   create_table "highlights", force: :cascade do |t|
@@ -121,6 +134,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_213005) do
   end
 
   add_foreign_key "books", "users"
+  add_foreign_key "credentials", "users"
   add_foreign_key "highlights", "books"
   add_foreign_key "highlights", "users"
   add_foreign_key "review_highlights", "highlights"
