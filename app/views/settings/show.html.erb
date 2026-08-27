@@ -1,0 +1,46 @@
+<% content_for :title, "Settings" %>
+
+<header class="page-header">
+  <div><p class="eyebrow">Connections & cadence</p><h1>Settings</h1></div>
+</header>
+
+<%= form_with url: settings_path, method: :patch, class: "settings-form" do |form| %>
+  <section class="panel">
+    <h2>Daily review</h2>
+    <div class="field-row">
+      <label>Time zone <%= form.time_zone_select "user[time_zone]", nil, default: Current.user.time_zone %></label>
+      <label>Delivery hour <%= form.number_field "user[daily_review_hour]", value: Current.user.daily_review_hour, min: 0, max: 23 %></label>
+      <label>Passages <%= form.number_field "user[daily_review_size]", value: Current.user.daily_review_size, min: 1, max: 20 %></label>
+    </div>
+    <label class="check"><%= form.check_box "user[daily_review_enabled]", checked: Current.user.daily_review_enabled? %> Email my review each day</label>
+  </section>
+
+  <section class="panel">
+    <p class="eyebrow"><%= @amazon.verified? ? "Connected" : "Kindle" %></p>
+    <h2>Amazon Notebook</h2>
+    <p>Paste only the value after <code>Cookie:</code> from a signed-in read.amazon.com request.</p>
+    <label>Cookie <%= password_field_tag "amazon[cookie]", nil, autocomplete: "off", placeholder: @amazon.configured? ? "Saved — leave blank to keep" : "session-id=…" %></label>
+    <% if @amazon.last_error.present? %><p class="error"><%= @amazon.last_error %></p><% end %>
+    <%= button_tag "Save settings", class: "button" %>
+    <% if @amazon.persisted? %><%= link_to "Test connection", credential_test_path(Credential::AMAZON), data: { turbo_method: :post }, class: "button quiet" %><% end %>
+  </section>
+
+  <section class="panel">
+    <p class="eyebrow"><%= @obsidian.verified? ? "Connected" : "Markdown out" %></p>
+    <h2>Obsidian Git vault</h2>
+    <% obsidian = @obsidian.settings %>
+    <div class="field-row two">
+      <label>HTTPS repository <%= url_field_tag "obsidian[remote_url]", obsidian[:remote_url], placeholder: "https://github.com/you/vault.git" %></label>
+      <label>Clone path on server <%= text_field_tag "obsidian[local_path]", obsidian[:local_path], placeholder: "/data/obsidian-vault" %></label>
+      <label>Folder in vault <%= text_field_tag "obsidian[folder]", obsidian[:folder], placeholder: "Holocron" %></label>
+      <label>Git username <%= text_field_tag "obsidian[username]", obsidian[:username], placeholder: "x-access-token" %></label>
+      <label>Access token <%= password_field_tag "obsidian[token]", nil, autocomplete: "off", placeholder: obsidian[:token].present? ? "Saved — leave blank to keep" : "Token" %></label>
+    </div>
+    <% if @obsidian.last_error.present? %><p class="error"><%= @obsidian.last_error %></p><% end %>
+    <%= button_tag "Save settings", class: "button" %>
+    <% if @obsidian.persisted? %>
+      <%= link_to "Test connection", credential_test_path(Credential::OBSIDIAN), data: { turbo_method: :post }, class: "button quiet" %>
+      <%= link_to "Sync now", obsidian_sync_path, data: { turbo_method: :post }, class: "button quiet" %>
+    <% end %>
+  </section>
+<% end %>

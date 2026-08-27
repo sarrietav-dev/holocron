@@ -1,0 +1,40 @@
+<% content_for :title, "Imports" %>
+
+<header class="page-header">
+  <div><p class="eyebrow">Kindle in</p><h1>Imports</h1></div>
+</header>
+
+<section class="panel-grid">
+  <article class="panel">
+    <p class="eyebrow">Reliable</p>
+    <h2>My Clippings.txt</h2>
+    <p>Connect your Kindle over USB and upload the file from its Documents folder.</p>
+    <%= form_with url: imports_clippings_path, multipart: true, class: "stacked-form" do |form| %>
+      <%= form.file_field :file, accept: ".txt,text/plain", required: true %>
+      <%= form.submit "Import clippings", class: "button" %>
+    <% end %>
+  </article>
+  <article class="panel">
+    <p class="eyebrow">Automatic</p>
+    <h2>Amazon Notebook</h2>
+    <p>Fetch books, covers, colors, and new passages using the cookie saved in Settings.</p>
+    <%= button_to "Sync Amazon now", imports_notebook_path, class: "button quiet" %>
+  </article>
+</section>
+
+<section class="history">
+  <h2>History</h2>
+  <% if @imports.any? %>
+    <% @imports.each do |import| %>
+      <article class="history-row">
+        <div><strong><%= import.source.label %></strong><small><%= time_ago_in_words(import.created_at) %> ago</small></div>
+        <span class="status status--<%= import.status %>"><%= import.status %></span>
+        <p><%= import.summary %></p>
+        <% if import.failed? %><p class="error"><%= import.error_message %></p><% end %>
+      </article>
+    <% end %>
+    <%= pagination %>
+  <% else %>
+    <p class="muted">No imports yet.</p>
+  <% end %>
+</section>

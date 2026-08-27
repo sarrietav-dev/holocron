@@ -12,7 +12,19 @@ Rails.application.routes.draw do
     resource :note, only: :update, module: :highlights
     resources :tags, only: %i[ create destroy ], module: :highlights
   end
-  resource :review_completion, only: :create, module: :reviews
+  resource :review_completion, only: :create, controller: "reviews/completions"
+  resources :imports, only: :index
+  namespace :imports do
+    resource :clippings, only: :create
+    resource :notebook, only: :create
+  end
+  resource :settings, only: %i[ show update ]
+  scope "credentials/:provider", as: :credential, module: :credentials do
+    resource :test, only: :create
+  end
+  namespace :obsidian do
+    resource :sync, only: :create
+  end
 
   get "up" => "rails/health#show", as: :rails_health_check
 

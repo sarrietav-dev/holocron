@@ -20,6 +20,11 @@ class Obsidian::Vault
     exported
   end
 
+  def test
+    authenticated_git "ls-remote", remote_url, "HEAD", chdir: Pathname("/")
+    true
+  end
+
   def write(book)
     path = note_path(book)
     FileUtils.mkdir_p(path.dirname)
