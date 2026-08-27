@@ -64,4 +64,68 @@ class ImportTest < ActiveSupport::TestCase
     import = clippings_import
     assert_match(/Sapiens/, import.source.raw_text)
   end
+
+  test "a notebook sync merges into what clippings already imported" do
+    clippings_import.run
+    sapiens = @user.books.find_by(title: "Sapiens: A Brief History of Humankind")
+    assert_nil sapiens.asin
+
+    notebook_import.run
+
+    # Same book, now with the ASIN and cover the notebook knows about.
+    assert_equal sapiens.id, @user.books.find_by(title: "Sapiens: A Brief History of Humankind").id
+    assert_equal "B00ICN066A", sapiens.reload.asin
+    assert_match %r{sapiens}, sapiens.cover_image_url
+  end
+
+  test "the same highlight from both sources stays one highlight" do
+    clippings_import.run
+    before = @user.highlights.count
+
+    notebook_import.run
+
+    sapiens = @user.books.find_by(title: "Sapiens: A Brief History of Humankind")
+    shared  = sapiens.highlights.find_by(text: "History is something very few people have been doing.")
+
+    assert_equal "yellow", shared.color, "the notebook fills in the colour clippings never had"
+    assert_equal "QUJDRDEyMw", shared.amazon_id, "and the Amazon id"
+    assert_equal 145, shared.location_start,
+      "but the location clippings already recorded is not overwritten: first source wins per field"
+    assert_operator @user.highlights.count, :>, before, "the notebook also brings highlights clippings did not have"
+    assert_equal 1, sapiens.highlights.where(text: shared.text).count
+  end
+
+  test "a failing notebook sync leaves the clippings data alone" do
+    clippings_import.run
+    imported = @user.highlights.count
+
+    broken = @user.imports.create!(source: Kindle::NotebookImport.new)
+    broken.source.notebook = Object.new.tap do |stub|
+      def stub.each_book(*) = raise(Kindle::Notebook::SessionExpired, "cookie expired")
+    end
+
+    assert_raises(Kindle::Notebook::SessionExpired) { broken.run }
+
+    assert_predicate broken.reload, :failed?
+    assert_match(/cookie expired/, broken.error_message)
+    assert_equal imported, @user.highlights.count
+  end
+
+  private
+    def notebook_import
+      @user.imports.create!(source: Kindle::NotebookImport.new).tap do |import|
+        import.source.notebook = stubbed_notebook
+      end
+    end
+
+    def stubbed_notebook
+      library = Kindle::Notebook::Page.new(file_fixture("notebook_library.html").read).books
+      pages   = Kindle::Notebook::Page.new(file_fixture("notebook_book.html").read).highlights
+
+      Object.new.tap do |stub|
+        stub.define_singleton_method(:each_book) do |&block|
+          library.each { |book| block.call(book.except(:token), pages) }
+        end
+      end
+    end
 end

@@ -2,7 +2,7 @@ class Import < ApplicationRecord
   include Runnable
 
   belongs_to :user
-  delegated_type :source, types: %w[ Kindle::ClippingsImport ], dependent: :destroy
+  delegated_type :source, types: %w[ Kindle::ClippingsImport Kindle::NotebookImport ], dependent: :destroy
 
   scope :newest_first, -> { order(created_at: :desc) }
 
