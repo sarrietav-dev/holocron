@@ -1,0 +1,16 @@
+<% content_for :title, "Today's review" %>
+
+<h1>Today's review</h1>
+
+<% if @review.highlights.any? %>
+  <ol>
+    <% @review.highlights.each do |highlight| %>
+      <li>
+        <blockquote><%= highlight.text %></blockquote>
+        <cite><%= highlight.book.title %></cite>
+      </li>
+    <% end %>
+  </ol>
+<% else %>
+  <p>Nothing to review yet — import some highlights first.</p>
+<% end %>
