@@ -11,18 +11,26 @@
 
 <p class="result-count"><%= pluralize(@total_count, "passage") %><%= " for “#{@query}”" if @query.present? %></p>
 
-<div class="reading-column">
-  <% @highlights.each do |highlight| %>
-    <article class="highlight">
-      <blockquote>
-        <% if highlight.respond_to?(:search_excerpt) && highlight.search_excerpt.present? %>
-          <%= sanitize highlight.search_excerpt, tags: %w[mark] %>
-        <% else %>
-          <%= simple_format highlight.text %>
-        <% end %>
-      </blockquote>
-      <footer><%= link_to highlight.book.title, highlight.book %> · <%= highlight.book.display_author %></footer>
-    </article>
-  <% end %>
-</div>
-<%= pagination %>
+<% if @highlights.any? %>
+  <div class="reading-column">
+    <% @highlights.each do |highlight| %>
+      <article class="highlight">
+        <blockquote>
+          <% if highlight.respond_to?(:search_excerpt) && highlight.search_excerpt.present? %>
+            <%= sanitize highlight.search_excerpt, tags: %w[mark] %>
+          <% else %>
+            <%= simple_format highlight.text %>
+          <% end %>
+        </blockquote>
+        <footer><%= link_to highlight.book.title, highlight.book %> · <%= highlight.book.display_author %></footer>
+      </article>
+    <% end %>
+  </div>
+  <%= pagination %>
+<% elsif @query.present? %>
+  <div class="empty-state empty-state--compact">
+    <p class="eyebrow">No matches</p>
+    <h2>Try another word or phrase.</h2>
+    <p>You can also search with filters such as <code>tag:wisdom</code> or <code>author:Austen</code>.</p>
+  </div>
+<% end %>

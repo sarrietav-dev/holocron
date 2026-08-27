@@ -2,7 +2,7 @@
 <html>
   <head>
     <title><%= content_for(:title) || "Holocron" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Holocron">
     <meta name="mobile-web-app-capable" content="yes">
@@ -23,19 +23,27 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="<%= Current.user ? "signed-in" : "signed-out" %>">
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <% if Current.user %>
       <header class="site-header">
-        <%= link_to root_path, class: "wordmark" do %><span>H</span> Holocron<% end %>
-        <nav>
-          <%= link_to "Review", root_path %>
-          <%= link_to "Library", books_path %>
-          <%= link_to "Search", search_path %>
-          <%= link_to "Imports", imports_path %>
-          <%= link_to "Settings", settings_path %>
-        </nav>
+        <div class="site-header__inner">
+          <%= link_to root_path, class: "wordmark", aria: { label: "Holocron home" } do %><span>H</span><strong>Holocron</strong><% end %>
+          <nav aria-label="Primary navigation">
+            <%= link_to root_path, class: "nav-link", aria: { current: current_page?(root_path) ? "page" : nil } do %><span class="nav-link__icon">01</span><span>Review</span><% end %>
+            <%= link_to books_path, class: "nav-link", aria: { current: request.path.start_with?(books_path) ? "page" : nil } do %><span class="nav-link__icon">02</span><span>Library</span><% end %>
+            <%= link_to search_path, class: "nav-link", aria: { current: current_page?(search_path) ? "page" : nil } do %><span class="nav-link__icon">03</span><span>Search</span><% end %>
+            <%= link_to imports_path, class: "nav-link", aria: { current: request.path.start_with?(imports_path) ? "page" : nil } do %><span class="nav-link__icon">04</span><span>Imports</span><% end %>
+            <%= link_to settings_path, class: "nav-link", aria: { current: current_page?(settings_path) ? "page" : nil } do %><span class="nav-link__icon">05</span><span>Settings</span><% end %>
+          </nav>
+        </div>
       </header>
     <% end %>
-    <main><%= yield %></main>
+    <main id="main-content">
+      <% flash.each do |type, message| %>
+        <div class="flash flash--<%= type %>" role="status"><%= message %></div>
+      <% end %>
+      <%= yield %>
+    </main>
   </body>
 </html>
