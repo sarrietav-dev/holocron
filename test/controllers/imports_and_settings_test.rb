@@ -9,8 +9,12 @@ class ImportsAndSettingsTest < ActionDispatch::IntegrationTest
   end
 
   test "renders import history and settings" do
+    @user.imports.create!(source: Kindle::NotebookImport.new)
+
     get imports_path
     assert_response :success
+    assert_select "turbo-cable-stream-source"
+    assert_select "article.history-row[id^='import_']"
 
     get settings_path
     assert_response :success

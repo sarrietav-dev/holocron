@@ -1,0 +1,6 @@
+<%= tag.article id: dom_id(import), class: "history-row" do %>
+  <div><strong><%= import.source.label %></strong><small><%= time_ago_in_words(import.created_at) %> ago</small></div>
+  <span class="status status--<%= import.status %>"><%= import.status %></span>
+  <p><%= import.summary %></p>
+  <% if import.failed? %><p class="error"><%= import.error_message %></p><% end %>
+<% end %>

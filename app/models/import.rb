@@ -4,6 +4,8 @@ class Import < ApplicationRecord
   belongs_to :user
   delegated_type :source, types: %w[ Kindle::ClippingsImport Kindle::NotebookImport ], dependent: :destroy
 
+  after_update_commit -> { broadcast_replace_later_to user, :imports }
+
   scope :newest_first, -> { order(created_at: :desc) }
 
   # Each source knows how to enumerate books and highlights; nothing here
