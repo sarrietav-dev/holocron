@@ -10,7 +10,52 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_27_212840) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_27_213002) do
+  create_table "books", force: :cascade do |t|
+    t.datetime "archived_at"
+    t.string "asin"
+    t.string "author"
+    t.string "cover_image_url"
+    t.datetime "created_at", null: false
+    t.string "dedupe_key", null: false
+    t.integer "highlights_count", default: 0, null: false
+    t.datetime "last_highlighted_at"
+    t.datetime "obsidian_synced_at"
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "archived_at"], name: "index_books_on_user_id_and_archived_at"
+    t.index ["user_id", "asin"], name: "index_books_on_user_id_and_asin", unique: true, where: "asin IS NOT NULL"
+    t.index ["user_id", "dedupe_key"], name: "index_books_on_user_id_and_dedupe_key", unique: true
+    t.index ["user_id"], name: "index_books_on_user_id"
+  end
+
+  create_table "highlights", force: :cascade do |t|
+    t.string "amazon_id"
+    t.integer "book_id", null: false
+    t.string "chapter"
+    t.string "color"
+    t.datetime "created_at", null: false
+    t.datetime "discarded_at"
+    t.boolean "favorite", default: false, null: false
+    t.datetime "highlighted_at"
+    t.datetime "last_reviewed_at"
+    t.integer "location_end"
+    t.integer "location_start"
+    t.text "note"
+    t.string "page"
+    t.integer "reviews_count", default: 0, null: false
+    t.text "text", null: false
+    t.string "text_hash", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["book_id", "text_hash"], name: "index_highlights_on_book_id_and_text_hash", unique: true
+    t.index ["book_id"], name: "index_highlights_on_book_id"
+    t.index ["user_id", "discarded_at", "last_reviewed_at"], name: "index_highlights_on_review_candidates"
+    t.index ["user_id", "favorite"], name: "index_highlights_on_user_id_and_favorite"
+    t.index ["user_id"], name: "index_highlights_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -18,6 +63,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_212840) do
     t.string "user_agent"
     t.integer "user_id", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "taggings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "tag_id", null: false
+    t.integer "taggable_id", null: false
+    t.string "taggable_type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tag_id", "taggable_type", "taggable_id"], name: "index_taggings_uniqueness", unique: true
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
+    t.index ["taggable_type", "taggable_id"], name: "index_taggings_on_taggable"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "slug"], name: "index_tags_on_user_id_and_slug", unique: true
+    t.index ["user_id"], name: "index_tags_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -28,5 +94,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_212840) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "books", "users"
+  add_foreign_key "highlights", "books"
+  add_foreign_key "highlights", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "taggings", "tags"
+  add_foreign_key "tags", "users"
 end
