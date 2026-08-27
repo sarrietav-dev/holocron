@@ -14,7 +14,8 @@ module User::Reviewing
   end
 
   def review_due_now?
-    daily_review_enabled? && in_time_zone.hour == daily_review_hour && !reviews.exists?(scheduled_for: today, sent_at: nil..)
+    daily_review_enabled? && in_time_zone.hour == daily_review_hour &&
+      !reviews.where(scheduled_for: today).where.not(sent_at: nil).exists?
   end
 
   def today = in_time_zone.to_date

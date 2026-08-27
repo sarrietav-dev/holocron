@@ -1,0 +1,10 @@
+<h1>Your daily review</h1>
+
+<% @review.highlights.each do |highlight| %>
+  <blockquote>
+    <p><%= highlight.text %></p>
+    <footer><%= highlight.book.title %> by <%= highlight.book.display_author %></footer>
+  </blockquote>
+<% end %>
+
+<p><%= link_to "Open today's review", review_url %></p>

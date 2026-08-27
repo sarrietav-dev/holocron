@@ -1,0 +1,8 @@
+YOUR DAILY REVIEW
+
+<% @review.highlights.each do |highlight| %>
+“<%= highlight.text %>”
+— <%= highlight.book.title %> by <%= highlight.book.display_author %>
+
+<% end %>
+Open today's review: <%= review_url %>
