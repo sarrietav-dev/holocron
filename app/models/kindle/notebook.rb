@@ -1,3 +1,5 @@
+require "net/http"
+
 # Reads highlights from read.amazon.com/notebook using a session cookie you
 # paste in from a signed-in browser.
 #
