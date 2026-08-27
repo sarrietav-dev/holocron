@@ -1,0 +1,28 @@
+<% content_for :title, "Search" %>
+
+<header class="page-header">
+  <div><p class="eyebrow">Every passage</p><h1>Search</h1></div>
+</header>
+
+<%= form_with url: search_path, method: :get, class: "search-form" do |form| %>
+  <%= form.search_field :q, value: @query, placeholder: "Search text, tag:wisdom, author:Austen…", autofocus: true, autocomplete: "off" %>
+  <%= form.submit "Search", class: "button" %>
+<% end %>
+
+<p class="result-count"><%= pluralize(@total_count, "passage") %><%= " for “#{@query}”" if @query.present? %></p>
+
+<div class="reading-column">
+  <% @highlights.each do |highlight| %>
+    <article class="highlight">
+      <blockquote>
+        <% if highlight.respond_to?(:search_excerpt) && highlight.search_excerpt.present? %>
+          <%= sanitize highlight.search_excerpt, tags: %w[mark] %>
+        <% else %>
+          <%= simple_format highlight.text %>
+        <% end %>
+      </blockquote>
+      <footer><%= link_to highlight.book.title, highlight.book %> · <%= highlight.book.display_author %></footer>
+    </article>
+  <% end %>
+</div>
+<%= pagination %>

@@ -24,6 +24,16 @@
   </head>
 
   <body>
-    <%= yield %>
+    <% if Current.user %>
+      <header class="site-header">
+        <%= link_to root_path, class: "wordmark" do %><span>H</span> Holocron<% end %>
+        <nav>
+          <%= link_to "Review", root_path %>
+          <%= link_to "Library", books_path %>
+          <%= link_to "Search", search_path %>
+        </nav>
+      </header>
+    <% end %>
+    <main><%= yield %></main>
   </body>
 </html>

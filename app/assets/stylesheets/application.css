@@ -1,10 +1,77 @@
-/*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
- */
+:root {
+  --paper: #f2eee5;
+  --surface: #fbf9f3;
+  --ink: #252621;
+  --muted: #77766c;
+  --line: #d9d3c5;
+  --accent: #9c3f2f;
+  --accent-soft: #ead8cf;
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); }
+a { color: inherit; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); }
+main { width: min(1120px, calc(100% - 2rem)); margin: 0 auto; padding: 4rem 0 7rem; }
+
+.site-header { width: min(1120px, calc(100% - 2rem)); height: 70px; margin: auto; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+.site-header nav { display: flex; gap: 1.5rem; font-size: .9rem; }
+.wordmark { font-family: Georgia, serif; font-weight: 700; text-decoration: none; letter-spacing: .02em; }
+.wordmark span { display: inline-grid; place-items: center; width: 2rem; height: 2rem; margin-right: .5rem; border-radius: 50%; background: var(--ink); color: var(--paper); }
+
+h1, h2, blockquote { font-family: Georgia, "Times New Roman", serif; }
+h1 { max-width: 850px; margin: .1em 0; font-size: clamp(2.8rem, 7vw, 6.5rem); font-weight: 400; line-height: .95; letter-spacing: -.045em; }
+.eyebrow { margin: 0 0 .75rem; color: var(--accent); font-size: .72rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.page-header { display: flex; align-items: end; justify-content: space-between; gap: 2rem; margin-bottom: 3rem; }
+.book-heading { margin-bottom: 4rem; }
+.book-heading h1 { max-width: 900px; font-size: clamp(2.5rem, 7vw, 5.8rem); }
+.back-link { display: inline-block; margin-bottom: 4rem; color: var(--muted); font-size: .85rem; }
+
+.book-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.book-card { min-height: 190px; display: grid; grid-template-columns: 105px 1fr; gap: 1.5rem; padding: 1.5rem; background: var(--surface); text-decoration: none; transition: background .2s; }
+.book-card:hover { background: #fff; }
+.book-card h2 { margin: .35rem 0; font-size: 1.45rem; line-height: 1.1; }
+.book-card p, .book-card small { color: var(--muted); }
+.book-card__cover { height: 145px; display: grid; place-items: center; overflow: hidden; background: var(--accent-soft); color: var(--accent); font-family: Georgia, serif; font-size: 1.5rem; }
+.book-card__cover img { width: 100%; height: 100%; object-fit: cover; }
+
+.reading-column { max-width: 760px; margin: auto; }
+.highlight { padding: 2.5rem 0; border-top: 1px solid var(--line); }
+.highlight blockquote { margin: 0; font-size: clamp(1.35rem, 3vw, 1.85rem); line-height: 1.55; }
+.highlight blockquote p { margin: 0; }
+.highlight footer { margin-top: 1.25rem; color: var(--muted); font-size: .82rem; }
+.highlight__note { margin: 1.5rem 0 0 2rem; padding-left: 1rem; border-left: 3px solid var(--accent-soft); color: var(--muted); }
+.tag { margin-left: .5rem; color: var(--accent); }
+mark { background: #f1d99d; color: inherit; }
+
+.search-form { display: flex; max-width: 900px; margin-bottom: 1rem; }
+.search-form input[type="search"] { min-width: 0; flex: 1; padding: 1.15rem 1.25rem; border: 1px solid var(--line); border-right: 0; background: var(--surface); color: var(--ink); font: inherit; font-size: 1.05rem; }
+.button, button, input[type="submit"] { padding: .85rem 1.15rem; border: 1px solid var(--ink); background: var(--ink); color: var(--surface); font: inherit; font-weight: 700; cursor: pointer; text-decoration: none; }
+.button.quiet { border-color: var(--line); background: transparent; color: var(--ink); }
+.result-count { margin: 0 0 3rem; color: var(--muted); font-size: .85rem; }
+.segmented { display: flex; border: 1px solid var(--line); }
+.segmented a { padding: .65rem 1rem; text-decoration: none; font-size: .8rem; }
+.segmented a.active { background: var(--ink); color: var(--surface); }
+.pagination { display: flex; justify-content: center; align-items: center; gap: 1.25rem; margin-top: 3rem; }
+.pagination__count { color: var(--muted); font-size: .8rem; }
+.empty-state { padding: 6rem 2rem; border: 1px solid var(--line); background: var(--surface); text-align: center; }
+.empty-state h2 { margin: 0; font-size: 2rem; font-weight: 400; }
+
+@media (max-width: 700px) {
+  main { padding-top: 2.5rem; }
+  .site-header nav { gap: .8rem; }
+  .wordmark { font-size: 0; }
+  .wordmark span { margin: 0; font-size: 1rem; }
+  .page-header { align-items: start; flex-direction: column; }
+  .book-grid { grid-template-columns: 1fr; }
+  .book-card { grid-template-columns: 80px 1fr; min-height: 150px; padding: 1rem; }
+  .book-card__cover { height: 115px; }
+  .search-form { flex-direction: column; gap: .5rem; }
+  .search-form input[type="search"] { border-right: 1px solid var(--line); }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root { --paper: #191a17; --surface: #22231f; --ink: #ece8dd; --muted: #aaa79d; --line: #3a3b35; --accent: #e18a72; --accent-soft: #4a302a; color-scheme: dark; }
+  .book-card:hover { background: #292a25; }
+}

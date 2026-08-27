@@ -1,0 +1,22 @@
+<% content_for :title, @book.title %>
+
+<header class="book-heading">
+  <%= link_to "← Library", books_path, class: "back-link" %>
+  <p class="eyebrow"><%= @book.display_author %></p>
+  <h1><%= @book.title %></h1>
+  <p><%= pluralize(@book.highlights_count, "highlight") %></p>
+</header>
+
+<div class="reading-column">
+  <% @highlights.each do |highlight| %>
+    <article class="highlight" id="highlight_<%= highlight.id %>">
+      <blockquote><%= simple_format(highlight.text) %></blockquote>
+      <% if highlight.note.present? %><p class="highlight__note"><%= highlight.note %></p><% end %>
+      <footer>
+        <span><%= highlight.location.present? ? "Location #{highlight.location}" : "Kindle highlight" %></span>
+        <% highlight.tag_list.each do |tag| %><span class="tag">#<%= tag %></span><% end %>
+      </footer>
+    </article>
+  <% end %>
+</div>
+<%= pagination %>

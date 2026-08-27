@@ -1,0 +1,39 @@
+<% content_for :title, "Library" %>
+
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Your collection</p>
+    <h1>Library</h1>
+  </div>
+  <div class="segmented">
+    <%= link_to "A–Z", books_path, class: params[:sort].blank? ? "active" : nil %>
+    <%= link_to "Recent", books_path(sort: "recent"), class: params[:sort] == "recent" ? "active" : nil %>
+  </div>
+</header>
+
+<% if @books.any? %>
+  <div class="book-grid">
+    <% @books.each do |book| %>
+      <%= link_to book, class: "book-card" do %>
+        <div class="book-card__cover">
+          <% if book.cover_image_url.present? %>
+            <%= image_tag book.cover_image_url, alt: "", loading: "lazy" %>
+          <% else %>
+            <span><%= book.title.first(2).upcase %></span>
+          <% end %>
+        </div>
+        <div>
+          <h2><%= book.title %></h2>
+          <p><%= book.display_author %></p>
+          <small><%= pluralize(book.highlights_count, "highlight") %></small>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <%= pagination %>
+<% else %>
+  <div class="empty-state">
+    <p class="eyebrow">The shelves are quiet</p>
+    <h2>Import your Kindle clippings to begin.</h2>
+  </div>
+<% end %>
