@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :highlights, dependent: :destroy
   has_many :tags, dependent: :destroy
   has_many :credentials, dependent: :destroy
+  has_many :imports, dependent: :destroy
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 

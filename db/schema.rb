@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_27_213006) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_27_213007) do
   create_table "books", force: :cascade do |t|
     t.datetime "archived_at"
     t.string "asin"
@@ -67,6 +67,37 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_213006) do
     t.index ["user_id", "discarded_at", "last_reviewed_at"], name: "index_highlights_on_review_candidates"
     t.index ["user_id", "favorite"], name: "index_highlights_on_user_id_and_favorite"
     t.index ["user_id"], name: "index_highlights_on_user_id"
+  end
+
+  create_table "imports", force: :cascade do |t|
+    t.integer "books_created", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.text "error_message"
+    t.datetime "finished_at"
+    t.integer "highlights_created", default: 0, null: false
+    t.integer "highlights_updated", default: 0, null: false
+    t.integer "source_id", null: false
+    t.string "source_type", null: false
+    t.datetime "started_at"
+    t.string "status", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["source_type", "source_id"], name: "index_imports_on_source"
+    t.index ["user_id", "created_at"], name: "index_imports_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_imports_on_user_id"
+  end
+
+  create_table "kindle_clippings_imports", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "filename"
+    t.text "raw_text", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "kindle_notebook_imports", force: :cascade do |t|
+    t.integer "books_seen", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "review_highlights", force: :cascade do |t|
@@ -137,6 +168,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_213006) do
   add_foreign_key "credentials", "users"
   add_foreign_key "highlights", "books"
   add_foreign_key "highlights", "users"
+  add_foreign_key "imports", "users"
   add_foreign_key "review_highlights", "highlights"
   add_foreign_key "review_highlights", "reviews"
   add_foreign_key "reviews", "users"

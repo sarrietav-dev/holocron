@@ -23,12 +23,17 @@ module Highlight::Searchable
 
     def indexing_suspended? = Thread.current[:holocron_indexing_suspended].present?
 
+    # Kept free of a custom SELECT so that .count still builds COUNT(*).
+    # Ask for #with_excerpts when the columns are actually going to be rendered.
     def matching(expression)
       joins("JOIN highlights_fts ON highlights_fts.rowid = highlights.id")
         .where("highlights_fts MATCH ?", expression)
-        .select("highlights.*", "#{RANKING} AS search_rank",
-                "snippet(highlights_fts, 0, '<mark>', '</mark>', '…', 24) AS search_excerpt")
         .order(Arel.sql(RANKING))
+    end
+
+    def with_excerpts
+      select("highlights.*", "#{RANKING} AS search_rank",
+             "snippet(highlights_fts, 0, '<mark>', '</mark>', '…', 24) AS search_excerpt")
     end
 
     # Turns whatever someone typed into a valid FTS5 expression. Bare terms are
