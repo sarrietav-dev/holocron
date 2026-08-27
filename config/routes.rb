@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resource :setup, only: %i[ show create ]
   resource :session
   resources :passwords, param: :token
 

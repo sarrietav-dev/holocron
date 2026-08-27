@@ -8,6 +8,14 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "new redirects to setup when the installation has no user" do
+    User.destroy_all
+
+    get new_session_path
+
+    assert_redirected_to setup_path
+  end
+
   test "create with valid credentials" do
     post session_path, params: { email_address: @user.email_address, password: "password" }
 

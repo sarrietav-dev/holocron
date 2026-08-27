@@ -1,0 +1,19 @@
+<section class="auth-card">
+  <header class="auth-header">
+    <div class="wordmark auth-wordmark"><span>H</span><strong>Holocron</strong></div>
+    <p class="eyebrow">First-time setup</p>
+    <h1>Create your account.</h1>
+    <p>Holocron supports one user. This will be the only account for this installation.</p>
+  </header>
+
+  <%= form_with model: @user, url: setup_path, class: "auth-form" do |form| %>
+    <% if @user.errors.any? %>
+      <div class="error" role="alert"><%= @user.errors.full_messages.to_sentence %></div>
+    <% end %>
+
+    <label>Email address<%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "you@example.com" %></label>
+    <label>Password<%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Your password", maxlength: 72 %></label>
+    <label>Confirm password<%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Repeat your password", maxlength: 72 %></label>
+    <%= form.submit "Create account", class: "button" %>
+  <% end %>
+</section>

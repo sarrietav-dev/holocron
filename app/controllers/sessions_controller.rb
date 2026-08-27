@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
   allow_unauthenticated_access only: %i[ new create ]
+  before_action :require_configured_account, only: %i[ new create ]
   rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to new_session_path, alert: "Try again later." }
 
   def new
@@ -18,4 +19,9 @@ class SessionsController < ApplicationController
     terminate_session
     redirect_to new_session_path, status: :see_other
   end
+
+  private
+    def require_configured_account
+      redirect_to setup_path unless User.exists?
+    end
 end

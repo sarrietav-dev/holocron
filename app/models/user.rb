@@ -12,6 +12,7 @@ class User < ApplicationRecord
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
+  validates :email_address, presence: true
   validates :daily_review_size, numericality: { in: 1..20 }
   validates :daily_review_hour, numericality: { in: 0..23 }
   validates :time_zone, inclusion: { in: ->(_) { ActiveSupport::TimeZone.all.map(&:name) } }
