@@ -26,6 +26,10 @@ module Highlight::Searchable
     # Kept free of a custom SELECT so that .count still builds COUNT(*).
     # Ask for #with_excerpts when the columns are actually going to be rendered.
     def matching(expression)
+      # An empty expression is "MATCH ''", which FTS5 rejects outright. Callers
+      # that mean "no filter" browse the table instead of coming through here.
+      return none if expression.blank?
+
       joins("JOIN highlights_fts ON highlights_fts.rowid = highlights.id")
         .where("highlights_fts MATCH ?", expression)
         .order(Arel.sql(RANKING))
