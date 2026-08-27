@@ -57,6 +57,24 @@ mark { background: #f1d99d; color: inherit; }
 .pagination__count { color: var(--muted); font-size: .8rem; }
 .empty-state { padding: 6rem 2rem; border: 1px solid var(--line); background: var(--surface); text-align: center; }
 .empty-state h2 { margin: 0; font-size: 2rem; font-weight: 400; }
+.review-stack { max-width: 850px; margin: 0 auto; padding: 0; list-style: none; counter-reset: review; }
+.review-card { position: relative; margin-bottom: 1rem; padding: clamp(2rem, 6vw, 5rem); border: 1px solid var(--line); background: var(--surface); }
+.review-card blockquote { margin: 0 0 2rem; font-size: clamp(1.5rem, 4vw, 2.5rem); line-height: 1.45; }
+.review-card cite { color: var(--muted); font-size: .85rem; font-style: normal; }
+.review-card__number { margin: 0 0 2rem; color: var(--accent); font-size: .7rem; font-weight: 800; letter-spacing: .15em; }
+.highlight-actions { display: flex; gap: .5rem; margin-top: 1.5rem; }
+.highlight-actions form, .tags-list form { display: inline; }
+.text-button, .tag-button { padding: .4rem .65rem; border-color: var(--line); background: transparent; color: var(--muted); font-size: .75rem; font-weight: 600; }
+.text-button.active { color: var(--accent); }
+.highlight-editor { margin-top: 1rem; color: var(--muted); font-size: .8rem; }
+.highlight-editor summary { cursor: pointer; }
+.highlight-editor textarea { width: 100%; margin: 1rem 0 .5rem; padding: .8rem; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font: inherit; resize: vertical; }
+.button.small { padding: .5rem .7rem; font-size: .75rem; }
+.tags-list { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .8rem; }
+.tag-form { display: flex; max-width: 280px; margin-top: .5rem; }
+.tag-form input[type="text"] { min-width: 0; padding: .5rem; border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
+.tag-form input[type="submit"] { padding: .45rem .7rem; }
+.review-finish { margin: 3rem auto; text-align: center; }
 
 @media (max-width: 700px) {
   main { padding-top: 2.5rem; }

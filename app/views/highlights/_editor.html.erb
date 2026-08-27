@@ -1,0 +1,16 @@
+<details class="highlight-editor">
+  <summary>Edit note & tags</summary>
+  <%= form_with model: highlight, url: highlight_note_path(highlight), method: :patch do |form| %>
+    <%= form.text_area :note, rows: 3, placeholder: "Add your note…" %>
+    <%= form.submit "Save note", class: "button small" %>
+  <% end %>
+  <div class="tags-list">
+    <% highlight.tags.each do |tag| %>
+      <%= button_to "##{tag.name} ×", highlight_tag_path(highlight, tag.slug), method: :delete, class: "tag-button" %>
+    <% end %>
+  </div>
+  <%= form_with url: highlight_tags_path(highlight), class: "tag-form" do |form| %>
+    <%= form.text_field :name, placeholder: "Add a tag", required: true %>
+    <%= form.submit "+", aria: { label: "Add tag" } %>
+  <% end %>
+</details>

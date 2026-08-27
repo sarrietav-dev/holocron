@@ -1,0 +1,12 @@
+<div class="highlight-actions">
+  <% if highlight.favorite? %>
+    <%= button_to "★ Saved", highlight_favorite_path(highlight), method: :delete, class: "text-button active" %>
+  <% else %>
+    <%= button_to "☆ Save", highlight_favorite_path(highlight), class: "text-button" %>
+  <% end %>
+  <% if highlight.discarded? %>
+    <%= button_to "Restore", highlight_discard_path(highlight), method: :delete, class: "text-button" %>
+  <% else %>
+    <%= button_to "Dismiss", highlight_discard_path(highlight), class: "text-button" %>
+  <% end %>
+</div>

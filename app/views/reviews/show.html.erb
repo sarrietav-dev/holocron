@@ -1,16 +1,32 @@
 <% content_for :title, "Today's review" %>
 
-<h1>Today's review</h1>
+<header class="page-header review-heading">
+  <div>
+    <p class="eyebrow"><%= @review.scheduled_for.strftime("%A, %B %-d") %></p>
+    <h1>Today's review</h1>
+  </div>
+  <p><%= pluralize(@review.highlights.size, "passage") %></p>
+</header>
 
 <% if @review.highlights.any? %>
-  <ol>
-    <% @review.highlights.each do |highlight| %>
-      <li>
+  <ol class="review-stack">
+    <% @review.highlights.each_with_index do |highlight, index| %>
+      <li class="review-card">
+        <p class="review-card__number"><%= format("%02d", index + 1) %></p>
         <blockquote><%= highlight.text %></blockquote>
-        <cite><%= highlight.book.title %></cite>
+        <cite><%= link_to highlight.book.title, highlight.book %> · <%= highlight.book.display_author %></cite>
+        <%= render "highlights/actions", highlight: highlight %>
+        <%= render "highlights/editor", highlight: highlight %>
       </li>
     <% end %>
   </ol>
+  <div class="review-finish">
+    <%= button_to(@review.completed? ? "Reviewed today" : "Complete review", review_completion_path,
+      class: "button", disabled: @review.completed?) %>
+  </div>
 <% else %>
-  <p>Nothing to review yet — import some highlights first.</p>
+  <div class="empty-state">
+    <p class="eyebrow">Nothing to review yet</p>
+    <h2>Import some Kindle highlights first.</h2>
+  </div>
 <% end %>
