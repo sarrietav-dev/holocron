@@ -6,6 +6,10 @@ class Highlight < ApplicationRecord
 
   validates :text, presence: true
 
+  # The Kindle highlighter inks, in the order Amazon lists them. Nil is a
+  # normal value: My Clippings.txt records no color.
+  COLORS = %w[ yellow blue pink orange ].freeze
+
   scope :favorited, -> { where(favorite: true) }
   scope :newest_first, -> { order(highlighted_at: :desc, id: :desc) }
   scope :in_reading_order, -> { order(Arel.sql("location_start IS NULL, location_start ASC, id ASC")) }

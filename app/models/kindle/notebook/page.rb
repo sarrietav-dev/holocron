@@ -10,7 +10,7 @@ class Kindle::Notebook::Page
   ANNOTATION_FALLBACK      = ".a-row.a-spacing-base".freeze
   SIGN_IN_SELECTOR    = "#ap_email, form[name='signIn'], #auth-error-message-box".freeze
 
-  COLORS = %w[ yellow blue pink orange ].freeze
+  COLORS = Highlight::COLORS
 
   def initialize(html)
     @html = html.to_s

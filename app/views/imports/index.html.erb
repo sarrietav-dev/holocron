@@ -1,12 +1,12 @@
 <% content_for :title, "Imports" %>
 
-<header class="page-header">
-  <div><p class="eyebrow">Kindle in</p><h1>Imports</h1></div>
+<header class="page-head">
+  <h1>Imports</h1>
 </header>
 
 <section class="panel-grid">
   <article class="panel">
-    <p class="eyebrow">Reliable</p>
+    <p class="eyebrow">From a file</p>
     <h2>My Clippings.txt</h2>
     <p>Connect your Kindle over USB and upload the file from its Documents folder.</p>
     <%= form_with url: imports_clippings_path, multipart: true, class: "stacked-form" do |form| %>
@@ -15,7 +15,7 @@
     <% end %>
   </article>
   <article class="panel">
-    <p class="eyebrow">Automatic</p>
+    <p class="eyebrow">From Amazon</p>
     <h2>Amazon Notebook</h2>
     <p>Fetch books, covers, colors, and new passages using the cookie saved in Settings.</p>
     <%= button_to "Sync Amazon now", imports_notebook_path, class: "button quiet" %>
@@ -29,6 +29,6 @@
     <%= render @imports %>
     <%= pagination %>
   <% else %>
-    <p class="muted">No imports yet.</p>
+    <p class="muted">No imports yet. Your first one will appear here as it runs.</p>
   <% end %>
 </section>

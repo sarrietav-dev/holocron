@@ -1,5 +1,5 @@
-<details class="highlight-editor">
-  <summary>Edit note & tags</summary>
+<details class="editor">
+  <summary>Note & tags</summary>
   <%= form_with model: highlight, url: highlight_note_path(highlight), method: :patch do |form| %>
     <%= form.text_area :note, rows: 3, placeholder: "Add your note…" %>
     <%= form.submit "Save note", class: "button small" %>

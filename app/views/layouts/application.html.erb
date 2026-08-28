@@ -19,6 +19,10 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fragment+Mono:ital@0;1&family=Literata:ital,opsz,wght@0,7..72,400..600;1,7..72,400..600&display=swap">
+
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
@@ -28,18 +32,18 @@
     <% if Current.user %>
       <header class="site-header">
         <div class="site-header__inner">
-          <%= link_to root_path, class: "wordmark", aria: { label: "Holocron home" } do %><span>H</span><strong>Holocron</strong><% end %>
+          <%= link_to root_path, class: "wordmark", aria: { label: "Holocron home" } do %><span class="stroke">Holocron</span><% end %>
           <nav aria-label="Primary navigation">
-            <%= link_to root_path, class: "nav-link", aria: { current: current_page?(root_path) ? "page" : nil } do %><span class="nav-link__icon">01</span><span>Review</span><% end %>
-            <%= link_to books_path, class: "nav-link", aria: { current: request.path.start_with?(books_path) ? "page" : nil } do %><span class="nav-link__icon">02</span><span>Library</span><% end %>
-            <%= link_to search_path, class: "nav-link", aria: { current: current_page?(search_path) ? "page" : nil } do %><span class="nav-link__icon">03</span><span>Search</span><% end %>
-            <%= link_to imports_path, class: "nav-link", aria: { current: request.path.start_with?(imports_path) ? "page" : nil } do %><span class="nav-link__icon">04</span><span>Imports</span><% end %>
-            <%= link_to settings_path, class: "nav-link", aria: { current: current_page?(settings_path) ? "page" : nil } do %><span class="nav-link__icon">05</span><span>Settings</span><% end %>
+            <%= link_to root_path, class: "nav-link", aria: { current: current_page?(root_path) ? "page" : nil } do %>Review<% end %>
+            <%= link_to books_path, class: "nav-link", aria: { current: request.path.start_with?(books_path) ? "page" : nil } do %>Library<% end %>
+            <%= link_to search_path, class: "nav-link", aria: { current: current_page?(search_path) ? "page" : nil } do %>Search<% end %>
+            <%= link_to imports_path, class: "nav-link", aria: { current: request.path.start_with?(imports_path) ? "page" : nil } do %>Imports<% end %>
+            <%= link_to settings_path, class: "nav-link", aria: { current: current_page?(settings_path) ? "page" : nil } do %>Settings<% end %>
           </nav>
         </div>
       </header>
     <% end %>
-    <main id="main-content">
+    <main id="main-content" class="<%= content_for(:main_class) %>">
       <% flash.each do |type, message| %>
         <div class="flash flash--<%= type %>" role="status"><%= message %></div>
       <% end %>

@@ -1,20 +1,25 @@
 <% content_for :title, "Today's review" %>
+<% content_for :main_class, "reading" %>
 
-<header class="page-header review-heading">
-  <div>
-    <p class="eyebrow"><%= @review.scheduled_for.strftime("%A, %B %-d") %></p>
-    <h1>Today's review</h1>
-  </div>
-  <p><%= pluralize(@review.highlights.size, "passage") %></p>
+<header class="page-head">
+  <h1>Review</h1>
+  <p class="apparatus">
+    <%= @review.scheduled_for.strftime("%a %-d %b") %> ·
+    <%= pluralize(@review.highlights.size, "passage") %>
+  </p>
 </header>
 
 <% if @review.highlights.any? %>
   <ol class="review-stack">
     <% @review.highlights.each_with_index do |highlight, index| %>
-      <li class="review-card">
-        <p class="review-card__number"><%= format("%02d", index + 1) %></p>
-        <blockquote><%= highlight.text %></blockquote>
-        <cite><%= link_to highlight.book.title, highlight.book %> · <%= highlight.book.display_author %></cite>
+      <li class="review-entry" style="--i: <%= index %>">
+        <%= passage highlight %>
+        <p class="attribution">
+          <%= link_to highlight.book.title, highlight.book %>
+          <span class="author"><%= highlight.book.display_author %></span>
+        </p>
+        <% if highlight.note.present? %><p class="note"><%= highlight.note %></p><% end %>
+        <%= provenance highlight %>
         <%= render "highlights/actions", highlight: highlight %>
         <%= render "highlights/editor", highlight: highlight %>
       </li>
@@ -26,9 +31,9 @@
   </div>
 <% else %>
   <div class="empty-state">
-    <p class="eyebrow">Nothing to review yet</p>
-    <h2>Import some Kindle highlights first.</h2>
-    <p>Once imported, Holocron will prepare a fresh selection for you each day.</p>
+    <p class="eyebrow">Nothing to review</p>
+    <h2>Import your Kindle highlights to start a daily review.</h2>
+    <p>Holocron will set aside a fresh selection each morning.</p>
     <%= link_to "Import highlights", imports_path, class: "button" %>
   </div>
 <% end %>

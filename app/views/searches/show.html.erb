@@ -1,7 +1,11 @@
 <% content_for :title, "Search" %>
+<% content_for :main_class, "reading" %>
 
-<header class="page-header">
-  <div><p class="eyebrow">Every passage</p><h1>Search</h1></div>
+<header class="page-head">
+  <h1>Search</h1>
+  <p class="apparatus">
+    <%= pluralize(@total_count, "passage") %><% if @query.present? %> matching <span class="verbatim">“<%= @query %>”</span><% end %>
+  </p>
 </header>
 
 <%= form_with url: search_path, method: :get, class: "search-form" do |form| %>
@@ -9,28 +13,29 @@
   <%= form.submit "Search", class: "button" %>
 <% end %>
 
-<p class="result-count"><%= pluralize(@total_count, "passage") %><%= " for “#{@query}”" if @query.present? %></p>
-
 <% if @highlights.any? %>
   <div class="reading-column">
     <% @highlights.each do |highlight| %>
       <article class="highlight">
-        <blockquote>
+        <blockquote class="passage">
           <% if highlight.respond_to?(:search_excerpt) && highlight.search_excerpt.present? %>
-            <%= sanitize highlight.search_excerpt, tags: %w[mark] %>
+            <p><%= sanitize highlight.search_excerpt, tags: %w[mark] %></p>
           <% else %>
             <%= simple_format highlight.text %>
           <% end %>
         </blockquote>
-        <footer><%= link_to highlight.book.title, highlight.book %> · <%= highlight.book.display_author %></footer>
+        <p class="attribution">
+          <%= link_to highlight.book.title, highlight.book %>
+          <span class="author"><%= highlight.book.display_author %></span>
+        </p>
       </article>
     <% end %>
   </div>
   <%= pagination %>
 <% elsif @query.present? %>
-  <div class="empty-state empty-state--compact">
+  <div class="empty-state">
     <p class="eyebrow">No matches</p>
     <h2>Try another word or phrase.</h2>
-    <p>You can also search with filters such as <code>tag:wisdom</code> or <code>author:Austen</code>.</p>
+    <p>You can also narrow a search with filters such as <code>tag:wisdom</code> or <code>author:Austen</code>.</p>
   </div>
 <% end %>

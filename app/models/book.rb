@@ -1,5 +1,5 @@
 class Book < ApplicationRecord
-  include Deduplicated, Exportable, Taggable
+  include Deduplicated, Exportable, Spectrum, Taggable
 
   belongs_to :user
   has_many :highlights, dependent: :destroy, extend: Highlight::Recording

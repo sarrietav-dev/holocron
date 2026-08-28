@@ -4,7 +4,7 @@ class BooksController < ApplicationController
   def index
     books = Current.user.books.unarchived.includes(:tags)
     books = books.tagged_with(params[:tag]) if params[:tag].present?
-    @books = paginate(params[:sort] == "recent" ? books.recently_highlighted : books.alphabetically)
+    @books = Book.preload_spectrum(paginate(params[:sort] == "recent" ? books.recently_highlighted : books.alphabetically))
   end
 
   def show

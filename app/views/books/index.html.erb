@@ -1,10 +1,7 @@
 <% content_for :title, "Library" %>
 
-<header class="page-header">
-  <div>
-    <p class="eyebrow">Your collection</p>
-    <h1>Library</h1>
-  </div>
+<header class="page-head">
+  <h1>Library</h1>
   <div class="segmented">
     <%= link_to "A–Z", books_path, class: params[:sort].blank? ? "active" : nil %>
     <%= link_to "Recent", books_path(sort: "recent"), class: params[:sort] == "recent" ? "active" : nil %>
@@ -12,10 +9,11 @@
 </header>
 
 <% if @books.any? %>
-  <div class="book-grid">
+  <% busiest = @books.map(&:highlights_count).max %>
+  <div class="shelf">
     <% @books.each do |book| %>
-      <%= link_to book, class: "book-card" do %>
-        <div class="book-card__cover">
+      <%= link_to book, class: "shelf-row" do %>
+        <div class="shelf-row__cover">
           <% if book.cover_image_url.present? %>
             <%= image_tag book.cover_image_url, alt: "", loading: "lazy" %>
           <% else %>
@@ -24,18 +22,19 @@
         </div>
         <div>
           <h2><%= book.title %></h2>
-          <p><%= book.display_author %></p>
-          <small><%= pluralize(book.highlights_count, "highlight") %></small>
+          <p class="author"><%= book.display_author %></p>
+          <%= spectrum_bar book, relative_to: busiest %>
         </div>
+        <span class="count"><%= book.highlights_count %></span>
       <% end %>
     <% end %>
   </div>
   <%= pagination %>
 <% else %>
   <div class="empty-state">
-    <p class="eyebrow">The shelves are quiet</p>
-    <h2>Import your Kindle clippings to begin.</h2>
-    <p>Your books and highlights will appear here, organized automatically.</p>
+    <p class="eyebrow">No books yet</p>
+    <h2>Import your Kindle highlights and they'll be organized into books here.</h2>
+    <p>Upload a clippings file, or connect your Amazon notebook to sync automatically.</p>
     <%= link_to "Import highlights", imports_path, class: "button" %>
   </div>
 <% end %>
