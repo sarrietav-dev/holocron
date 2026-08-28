@@ -95,6 +95,7 @@ class Kindle::Notebook
         request["User-Agent"]      = USER_AGENT
         request["Accept"]          = "text/html,application/xhtml+xml"
         request["Accept-Language"] = "en-US,en;q=0.9"
+        request["X-Requested-With"] = "XMLHttpRequest" if path.include?("asin=")
       end
     end
 

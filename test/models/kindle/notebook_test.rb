@@ -39,6 +39,22 @@ class Kindle::NotebookTest < ActiveSupport::TestCase
     assert_raises(Kindle::Notebook::SessionExpired) { Kindle::Notebook.new(credential: empty) }
   end
 
+  test "requests annotation pages as HTML fragments" do
+    client = Kindle::Notebook.new(credential: @credential)
+
+    request = client.send(:request_for, "/notebook?asin=B00TEST&token=abc")
+
+    assert_equal "XMLHttpRequest", request["X-Requested-With"]
+  end
+
+  test "does not request the library page as an HTML fragment" do
+    client = Kindle::Notebook.new(credential: @credential)
+
+    request = client.send(:request_for, "/notebook")
+
+    assert_nil request["X-Requested-With"]
+  end
+
   test "yields each book with its highlights" do
     client = notebook([ [ "asin=", fixture("notebook_book") ], [ "/notebook", fixture("notebook_library") ] ])
     books = client.each_book.to_a

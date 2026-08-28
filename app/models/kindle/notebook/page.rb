@@ -7,7 +7,7 @@
 class Kindle::Notebook::Page
   BOOK_SELECTORS      = [ ".kp-notebook-library-each-book", "[id^='B0'].a-row" ].freeze
   ANNOTATION_SELECTOR = "#kp-notebook-annotations .a-row.a-spacing-base".freeze
-  SIGN_IN_MARKERS     = [ "ap_email", "signin", "auth-error-message-box" ].freeze
+  SIGN_IN_SELECTOR    = "#ap_email, form[name='signIn'], #auth-error-message-box".freeze
 
   COLORS = %w[ yellow blue pink orange ].freeze
 
@@ -47,8 +47,7 @@ class Kindle::Notebook::Page
 
   private
     def sign_in_page?
-      return false if @html.include?("kp-notebook")
-      SIGN_IN_MARKERS.any? { |marker| @html.include?(marker) }
+      @doc.at_css(SIGN_IN_SELECTOR).present?
     end
 
     # Amazon says so explicitly when a book genuinely has no highlights; without
