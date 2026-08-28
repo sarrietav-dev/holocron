@@ -53,8 +53,14 @@ class Kindle::Notebook::Page
     # Amazon says so explicitly when a book genuinely has no highlights; without
     # that marker, zero annotations means the parser has gone stale.
     def empty_book?
-      @doc.at_css("#kp-notebook-no-annotations, .kp-notebook-no-annotations-message").present? ||
+      visible_empty_pane? ||
+        @doc.at_css("#kp-notebook-no-annotations, .kp-notebook-no-annotations-message").present? ||
         @html.match?(/you have no (?:highlights|notes)/i)
+    end
+
+    def visible_empty_pane?
+      pane = @doc.at_css("#empty-annotations-pane")
+      pane.present? && !pane["class"].to_s.split.include?("aok-hidden")
     end
 
     def book_from(node)

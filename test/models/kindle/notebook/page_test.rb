@@ -45,6 +45,7 @@ class Kindle::Notebook::PageTest < ActiveSupport::TestCase
 
   test "a book with genuinely no highlights is not an error" do
     assert_empty page("notebook_empty_book").highlights
+    assert_empty page("notebook_empty_book_current").highlights
   end
 
   test "raises SessionExpired on the sign-in page" do
