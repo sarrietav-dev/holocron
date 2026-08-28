@@ -48,6 +48,14 @@ class Kindle::Notebook::PageTest < ActiveSupport::TestCase
     assert_empty page("notebook_empty_book_current").highlights
   end
 
+  test "parses annotation rows from an AJAX fragment without the container div" do
+    highlights = page("notebook_annotation_ajax_fragment").highlights
+
+    assert_equal 3, highlights.size
+    assert highlights.first[:text].include?("Gandalf")
+    assert highlights.first[:amazon_id].present?
+  end
+
   test "raises SessionExpired on the sign-in page" do
     assert_raises(Kindle::Notebook::SessionExpired) { page("notebook_signed_out") }
   end

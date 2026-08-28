@@ -6,7 +6,8 @@
 # LayoutChanged, not "no highlights".
 class Kindle::Notebook::Page
   BOOK_SELECTORS      = [ ".kp-notebook-library-each-book", "[id^='B0'].a-row" ].freeze
-  ANNOTATION_SELECTOR = "#kp-notebook-annotations .a-row.a-spacing-base".freeze
+  ANNOTATION_SELECTOR      = "#kp-notebook-annotations .a-row.a-spacing-base".freeze
+  ANNOTATION_FALLBACK      = ".a-row.a-spacing-base".freeze
   SIGN_IN_SELECTOR    = "#ap_email, form[name='signIn'], #auth-error-message-box".freeze
 
   COLORS = %w[ yellow blue pink orange ].freeze
@@ -30,6 +31,7 @@ class Kindle::Notebook::Page
 
   def highlights
     nodes = @doc.css(ANNOTATION_SELECTOR)
+    nodes = @doc.css(ANNOTATION_FALLBACK) if nodes.empty?
 
     if nodes.empty?
       return [] if empty_book?
