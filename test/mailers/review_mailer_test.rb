@@ -12,6 +12,9 @@ class ReviewMailerTest < ActionMailer::TestCase
     assert_equal [ user.email_address ], mail.to
     assert_equal "Your daily Holocron review", mail.subject
     assert_includes mail.html_part.body.to_s, "Stories bind strangers together."
+    assert_includes mail.html_part.body.to_s, "1 passage"
+    assert_includes mail.html_part.body.to_s, "Open today&#39;s review"
     assert_includes mail.text_part.body.to_s, "Sapiens"
+    assert_includes mail.text_part.body.to_s, "1 passage"
   end
 end

@@ -1,4 +1,5 @@
 YOUR DAILY REVIEW
+<%= @review.scheduled_for.strftime("%A, %-d %B") %> · <%= pluralize(@review.highlights.size, "passage") %>
 
 <% @review.highlights.each do |highlight| %>
 “<%= highlight.text %>”
